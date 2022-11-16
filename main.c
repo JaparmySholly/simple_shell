@@ -42,11 +42,6 @@ int main(void)
 		{
 			print_error(&data);
 			break;
-		}
-<<<<<<< HEAD
-=======
-
->>>>>>> fca11834dbd77ce3932f2e14463400a11a2985af
 	}
 	free_data(&data);
 
