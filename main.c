@@ -5,13 +5,13 @@
  * Return: 0 on success
  */
 
-int main()
+int main(void)
 {
 	/* main function with while loop of our shell */
 	sh_t data;
 	int pl;
 
-	memset(&data, 0, sizeof(data));
+	_memset(&data, 0, sizeof(data));
 	signal(SIGINT, signal_handler);
 	while (true)
 	{
@@ -43,7 +43,6 @@ int main()
 			print_error(&data);
 			break;
 		}
-		free_data(&data);
 	}
 	free_data(&data);
 
