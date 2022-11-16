@@ -20,7 +20,7 @@
 
 - sh (Run sh as well)
 
-## General Learning Objectives: 
+## General Learning Objectives:
 
 - Who designed and implemented the original Unix operating system
 
