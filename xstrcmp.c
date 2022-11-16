@@ -99,6 +99,6 @@ int _strlen(char *str)
 	if (str == NULL)
 		return (-1);
 	for (ptr = str; *ptr; ptr++)
-				;
+		;
 	return (ptr - str);
 }
