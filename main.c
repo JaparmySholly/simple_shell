@@ -1,51 +1,44 @@
-#include "main.h"
+#include "shell.h"
 
 /**
- * main - Entry point of c programs
- * Return: 0 on success
+ * main - entry point
+ * @ac: arg count
+ * @av: arg vector
+ *
+ * Return: 0 on success, 1 on error
  */
-
-int main()
+int main(int ac, char **av)
 {
-	/* main function with while loop of our shell */
-	sh_t data;
-	int pl;
+	info_t info[] = { INFO_INIT };
+	int fd = 2;
 
-	memset(&data, 0, sizeof(data));
-	signal(SIGINT, signal_handler);
-	while (true)
+	asm ("mov %1, %0\n\t"
+		"add $3, %0"
+		: "=r" (fd)
+		: "r" (fd));
+
+	if (ac == 2)
 	{
-		index_cmd(&data);
-		if (read_line(&data) < 0)
+		fd = open(av[1], O_RDONLY);
+		if (fd == -1)
 		{
-			if (isatty(STDIN_FILENO))
-				PRINT("\n");
-			break;
+			if (errno == EACCES)
+				exit(126);
+			if (errno == ENOENT)
+			{
+				_eputs(av[0]);
+				_eputs(": 0: Can't open ");
+				_eputs(av[1]);
+				_eputchar('\n');
+				_eputchar(BUF_FLUSH);
+				exit(127);
+			}
+			return (EXIT_FAILURE);
 		}
-		if (split_line(&data) < 0)
-		{
-			free_data(&data);
-			continue;
-		}
-		pl = parse_line(&data);
-		if (pl == 0)
-		{
-			free_data(&data);
-			continue;
-		}
-		if (pl < 0)
-		{
-			print_error(&data);
-			continue;
-		}
-		if (execute(&data) < 0)
-		{
-			print_error(&data);
-			break;
-		}
-		free_data(&data);
+		info->readfd = fd;
 	}
-	free_data(&data);
-
-	return (0);
+	populate_env_list(info);
+	read_history(info);
+	hsh(info, av);
+	return (EXIT_SUCCESS);
 }
